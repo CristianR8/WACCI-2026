@@ -6,6 +6,11 @@ export const navItems = [
   },
   {
     type: "link",
+    label: "Travel",
+    href: "/travel",
+  },
+  {
+    type: "link",
     href: "/",
     label: "Home",
   },
