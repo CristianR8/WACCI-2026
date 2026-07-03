@@ -1,32 +1,37 @@
 export const navItems = [
   {
-    type: 'link',
-    href: '/',
-    label: 'Home',
+    type: "link",
+    label: "Venue",
+    href: "/venue",
   },
   {
-    type: 'link',
-    label: 'Chat',
-    href: '/text-generator',
+    type: "link",
+    href: "/",
+    label: "Home",
   },
   {
-    type: 'link',
-    label: 'Pricing',
-    href: '/pricing',
+    type: "link",
+    label: "Chat",
+    href: "/text-generator",
   },
   {
-    type: 'link',
-    label: 'Contact',
-    href: '/contact',
+    type: "link",
+    label: "Pricing",
+    href: "/pricing",
   },
   {
-    type: 'dropdown',
-    label: 'Pages',
+    type: "link",
+    label: "Contact",
+    href: "/contact",
+  },
+  {
+    type: "dropdown",
+    label: "Pages",
     items: [
-      { href: '/signin', label: 'Sign In' },
-      { href: '/signup', label: 'Sign Up' },
-      { href: '/reset-password', label: 'Reset Password' },
-      { href: '/not-found', label: '404 Error' },
+      { href: "/signin", label: "Sign In" },
+      { href: "/signup", label: "Sign Up" },
+      { href: "/reset-password", label: "Reset Password" },
+      { href: "/not-found", label: "404 Error" },
     ],
   },
 ] satisfies NavItem[];
@@ -34,10 +39,10 @@ export const navItems = [
 type NavItem = Record<string, string | unknown> &
   (
     | {
-        type: 'link';
+        type: "link";
         href: string;
       }
     | {
-        type: 'dropdown';
+        type: "dropdown";
       }
   );
