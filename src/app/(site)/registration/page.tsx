@@ -23,9 +23,6 @@ export default function RegistrationPage() {
           <h1 className="text-4xl md:text-5xl font-extrabold text-primary-500 mb-4">
             Registration
           </h1>
-          <span className="text-primary-500 font-bold tracking-widest uppercase text-xs mb-6 block">
-            WACCI 2026 · Pucón, Chile · December 14–17, 2026
-          </span>
           <p className="max-w-3xl mx-auto text-base md:text-lg text-gray-600 leading-relaxed">
             Thank you for your interest in attending WACCI 2026! Please fill out the form below to
             register for the event and help us make your experience exceptional.

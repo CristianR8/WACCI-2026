@@ -656,3 +656,56 @@ function check_(name, ok) {
   console.log((ok ? 'PASS ' : 'FAIL ') + name);
   return ok;
 }
+
+/**
+ * After a load test (emails "loadtest+…@example.com"): checks the rows are intact and
+ * deletes them. Run from the editor. Does NOT touch real registrations.
+ * Logs: rows found, duplicate Submission IDs, blank rows inside the data, then deletes.
+ */
+function verifyAndDeleteLoadTestRows() {
+  const lock = LockService.getScriptLock();
+  lock.waitLock(30000); // don't race with real submissions while deleting
+  try {
+    const sheet = getSheet_();
+    const map = getHeaderMap_(sheet);
+    const lastRow = sheet.getLastRow();
+    if (lastRow < 2) return console.log('Sheet has no data rows.');
+
+    const data = sheet.getRange(2, 1, lastRow - 1, map.width).getDisplayValues();
+    const emailIdx = map.index[normalizeHeader_('Email')];
+    const idIdx = map.index[normalizeHeader_('Submission ID')];
+
+    const testRows = []; // 1-based sheet row numbers
+    const ids = {};
+    let duplicateIds = 0;
+    let blankRows = 0;
+    data.forEach(function (r, i) {
+      if (r.every(function (c) { return c === ''; })) blankRows++;
+      if (String(r[emailIdx]).indexOf('loadtest+') === 0) {
+        testRows.push(i + 2);
+        if (ids[r[idIdx]]) duplicateIds++;
+        ids[r[idIdx]] = true;
+      }
+    });
+
+    console.log('Load-test rows found: ' + testRows.length);
+    check_('no duplicate Submission IDs', duplicateIds === 0);
+    check_('no blank rows inside the data (' + blankRows + ')', blankRows === 0);
+
+    // Delete bottom-up in contiguous blocks (fast and keeps row numbers valid).
+    let i = testRows.length - 1;
+    while (i >= 0) {
+      let start = testRows[i];
+      let count = 1;
+      while (i - count >= 0 && testRows[i - count] === start - 1) {
+        start--;
+        count++;
+      }
+      sheet.deleteRows(start, count);
+      i -= count;
+    }
+    console.log('Deleted ' + testRows.length + ' load-test rows.');
+  } finally {
+    lock.releaseLock();
+  }
+}

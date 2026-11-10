@@ -77,7 +77,9 @@ const FIELD_ORDER: FieldName[] = [
   'feeOption',
 ];
 
-const REQUEST_TIMEOUT_MS = 30_000;
+// Must be longer than the Apps Script lock wait (CONFIG.LOCK_TIMEOUT_MS = 25 s) + the write itself,
+// otherwise under load the browser gives up while the server is still saving the row.
+const REQUEST_TIMEOUT_MS = 45_000;
 
 function newSubmissionToken() {
   if (typeof crypto !== 'undefined' && 'randomUUID' in crypto) {
